@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Weather App</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background-color: #f0f8ff; }
+        input { padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; font-size: 16px; border-radius: 5px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #0056b3; }
+        #weather-result { margin-top: 20px; font-size: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Weather App 🌤️</h1>
+    <input type="text" id="city-input" placeholder="Enter city name">
+    <button onclick="getWeather()">Search</button>
+
+    <div id="weather-result"></div>
+
+    <script>
+        async function getWeather() {
+            const city = document.getElementById('city-input').value;
+            const resultDiv = document.getElementById('weather-result');
+            
+            if (!city) {
+                resultDiv.innerHTML = "Please enter a city name.";
+                return;
+            }
+
+            resultDiv.innerHTML = "Loading...";
+            
+            // YOUR LIVE RENDER URL IS HERE
+            const API_URL = `https://weather-api-u65i.onrender.com/weather?city=${city}`;
+
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <h2>${data.city}</h2>
+                        <p>Temperature: ${data.temperature}°C</p>
+                        <p>Condition: ${data.description}</p>
+                        <p>Humidity: ${data.humidity}%</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p style="color: red;">${data.error}</p>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<p style="color: red;">Failed to connect to the server. It might be waking up, please try again.</p>`;
+            }
+        }
+    </script>
+</body>
+</html>
